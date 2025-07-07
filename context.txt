@@ -1,0 +1,3 @@
+I am building a tool to suggest codebase-wide refactors.
+
+I need my services to be super optimized and scalable beacause some codebases may be millions of lines of code/thoasands of files in size.

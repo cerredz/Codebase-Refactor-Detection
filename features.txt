@@ -1,0 +1,12 @@
+- find which files are similiar
+- can choose a file/file path to ignore (useful for dependencies)
+- highlight/discover sections in the similiar files that are the actual similiar parts
+- 
+
+- use of graphs:
+    - store all fingerprints generated as we traverse through them
+    - 1) get the fingerprint of a line of code, attach previous and next fingerprint to this one
+    - 2) lookup similiar fingerprints in constant time
+    - 3) create a "connection/edge" between similir fingerprints above a certain threshold (1 line, assume exact match after normalizing)
+    - 4) after going through fingerprints, go through our strongly connected components and traverse outward through our double linked list
+    
