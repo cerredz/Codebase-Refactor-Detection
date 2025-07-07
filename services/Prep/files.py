@@ -3,14 +3,15 @@ from collections import deque
 import os
 
 def get_invalid_file_paths():
-    relative_path = "../hidden_filepath.txt"
+    relative_path = "./hidden_filepaths.txt"
     absolute_path = os.path.abspath(relative_path)
     res = set()
 
     # read pre-defined hidden file-paths from the user
     with open(absolute_path, "r") as file:
         path = file.readline()
-        res.add(path)
+        abs_path = os.path.abspath(f"./codebase/{path}")
+        res.add(abs_path)
     return res
 
 def is_invalid_file_path(file_path: str):

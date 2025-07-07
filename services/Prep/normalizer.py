@@ -5,7 +5,7 @@ def normalize_file_path(abs_file_path: str):
     code = []
     line_mapping = []  
     
-    with open(abs_file_path, "r") as file:
+    with open(abs_file_path, "r", encoding="utf-8") as file:
         in_multiline_string = False
         original_line_number = 0
         
