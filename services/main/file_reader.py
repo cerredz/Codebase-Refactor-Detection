@@ -1,5 +1,6 @@
 from services.Prep.normalizer import *
 from services.Prep.files import *
+from services.LSH.lsh import *
 import json
 
 # Helper function for reading the codebase, reads all of the files in a directory, then recursively reads files in subdirectories
@@ -30,4 +31,8 @@ def read_codebase():
     return file_mappings
 
 if __name__ == "__main__":
-    print(json.dumps(read_codebase(), indent=2))
+
+    file_mappings = read_codebase() # normalized code of all files, mapping to original file index
+
+    lsh = lsh(file_mappings)
+    #print(json.dumps(read_codebase(), indent=2))
