@@ -14,6 +14,7 @@ def lsh(file_mapping: dict):
 
     # 2) Convert union to list for consistent indexing
     shingle_list = list(union)
+    shingle_index_map = {shingle: idx for idx, shingle in enumerate(shingle_list)}
 
     # 3) Hash functions
     num_hash_functions = 100
@@ -23,22 +24,29 @@ def lsh(file_mapping: dict):
     signatures  = {}
     for file_key, file_data in file_mapping.items():
         code_lines = file_data["code"]
+        original_lines = file_data["line_mapping"]
+
         for line_idx, line in enumerate(code_lines):
             line_shingle_set = generate_shingle_set(line)
+            
             if line_shingle_set is not None:
-                signature = create_signature(line_shingle_set, shingle_list, hash_functions)
+                signature = create_signature(line_shingle_set, shingle_index_map, hash_functions)
+
                 # Store with metadata
                 fingerprint_id = f"{file_key}_{line_idx}"
+                prev_id = f"{file_key}_{line_idx - 1}" if line_idx > 0 else None
+                next_id = f"{file_key}_{line_idx + 1}" if line_idx < len(code_lines) - 1 else None
+
                 signatures[fingerprint_id] = {
                     'signature': signature,
                     'file': file_key,
                     'line_number': line_idx,
-                    'original_line': line
+                    'original_line': line,
+                    'original_line_number': original_lines[line_idx],
+                    'next_signature': next_id,
+                    'prev_signature': prev_id
                 }
 
-
-
-
-
-
+    import json
+    print(json.dumps(signatures, indent=2))
     return 0
