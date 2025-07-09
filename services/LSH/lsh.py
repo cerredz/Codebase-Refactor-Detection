@@ -24,21 +24,21 @@ def lsh(file_mapping: dict):
     print("🟢 Generated hash functions. (3/7)")
 
     # 4) Build signature matrix
-    signatures  = {}
+    signatures = {}
+    signature_keys_by_file = {}  # Track which line indices have signatures for each file
+
     for file_key, file_data in file_mapping.items():
         code_lines = file_data["code"]
         original_lines = file_data["line_mapping"]
+        signature_keys_by_file[file_key] = []
 
         for line_idx, line in enumerate(code_lines):
             line_shingle_set = generate_shingle_set(line)
             
             if line_shingle_set is not None:
                 signature = create_signature(line_shingle_set, shingle_index_map, hash_functions)
-
-                # Store with metadata
                 fingerprint_id = f"{file_key}_{line_idx}"
-                prev_id = f"{file_key}_{line_idx - 1}" if line_idx > 0 else None
-                next_id = f"{file_key}_{line_idx + 1}" if line_idx < len(code_lines) - 1 else None
+                signature_keys_by_file[file_key].append((line_idx, fingerprint_id))
 
                 signatures[fingerprint_id] = {
                     'signature': signature,
@@ -46,9 +46,23 @@ def lsh(file_mapping: dict):
                     'line_number': line_idx,
                     'original_line': line,
                     'original_line_number': original_lines[line_idx],
-                    'next_signature': next_id,
-                    'prev_signature': prev_id
+                    'next_signature': None,  # Will be set in next step
+                    'prev_signature': None   # Will be set in next step
                 }
+
+    # Now create the proper links between existing signatures
+    for file_key, line_data in signature_keys_by_file.items():
+        for i, (line_idx, fingerprint_id) in enumerate(line_data):
+            # Set previous signature link
+            if i > 0:
+                prev_fingerprint_id = line_data[i-1][1]
+                signatures[fingerprint_id]['prev_signature'] = prev_fingerprint_id
+            
+            # Set next signature link  
+            if i < len(line_data) - 1:
+                next_fingerprint_id = line_data[i+1][1]
+                signatures[fingerprint_id]['next_signature'] = next_fingerprint_id
+
     print("🟢 Built signature matrix. (4/7)")
 
     # 5) Create buckets for banding

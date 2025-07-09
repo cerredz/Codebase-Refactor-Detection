@@ -1,6 +1,7 @@
 from services.Prep.normalizer import *
 from services.Prep.files import *
 from services.LSH.lsh import *
+from services.Similiarity.find_similiar_regions import *
 import json
 
 # Helper function for reading the codebase, reads all of the files in a directory, then recursively reads files in subdirectories
@@ -34,10 +35,15 @@ def read_codebase():
     return file_mappings
 
 if __name__ == "__main__":
+    # read codebase
     print("Running algorithm to suggest codbase refactors...")
     file_mappings = read_codebase() # normalized code of all files, mapping to original file index
+
+    # find similiar lines using lsh
     print("Running the lsh algorithm for similiarity searching...")
     signatures, similiarity_adjacency_list = lsh(file_mappings) # run the lsh algorithm to hash similiar lines
     
     #print(json.dumps(lsh, indent=2))
-    print(json.dumps(similiarity_adjacency_list, indent=2))
+    print("Finding similiar regions of code...")
+    find_similiar_regions(signatures, similiarity_adjacency_list)
+    

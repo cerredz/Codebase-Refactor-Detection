@@ -73,12 +73,6 @@ def calculate_jaccard_similarity(sig1, sig2):
     return matches / len(sig1) 
 
 
-
-
-
-
-
-
 if __name__ == "__main__":
     print(generate_shingle_set("print(hello world)"))
 
