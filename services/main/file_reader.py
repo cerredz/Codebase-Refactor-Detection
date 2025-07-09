@@ -26,11 +26,18 @@ def read_dir(current_path: str):
 
 # Read the codebase
 def read_codebase():
+    print("Reading codebase...")
     abs_codebase_path = get_codebase_dir()
     file_mappings = read_dir(abs_codebase_path)
+    print(f"🟢 Found {len(file_mappings)} files inside of the codebase.")
+    print(f"🟢 Codebase contains {sum(len(file_data['code']) for file_data in file_mappings.values())} lines of code after normalizing.")
     return file_mappings
 
 if __name__ == "__main__":
+    print("Running algorithm to suggest codbase refactors...")
     file_mappings = read_codebase() # normalized code of all files, mapping to original file index
-    lsh = lsh(file_mappings) # run the lsh algorithm to hash similiar lines
+    print("Running the lsh algorithm for similiarity searching...")
+    signatures, similiarity_adjacency_list = lsh(file_mappings) # run the lsh algorithm to hash similiar lines
+    
     #print(json.dumps(lsh, indent=2))
+    print(json.dumps(similiarity_adjacency_list, indent=2))
