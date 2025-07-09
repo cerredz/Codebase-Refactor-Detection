@@ -31,8 +31,6 @@ def read_codebase():
     return file_mappings
 
 if __name__ == "__main__":
-
     file_mappings = read_codebase() # normalized code of all files, mapping to original file index
-
-    lsh = lsh(file_mappings)
-    #print(json.dumps(read_codebase(), indent=2))
+    lsh = lsh(file_mappings) # run the lsh algorithm to hash similiar lines
+    #print(json.dumps(lsh, indent=2))

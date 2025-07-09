@@ -38,6 +38,40 @@ def create_signature(shingle_set: set, shingle_index_map: list, hash_functions):
     
     return signature
 
+# Splitting a vector into buckets of size b (need for banding in lsh)
+def split_vector(signature: list, b: int):
+    assert len(signature) % b == 0
+    sub_size = int(len(signature) // b)
+    return [signature[i:i + sub_size] for i in range(0, len(signature), sub_size)]
+
+# Creates the buckets for the lsh algorithm
+def create_band_buckets(signatures, num_bands):
+    band_buckets = {}
+    for fingerprint_id, fingerprint_data in signatures.items():
+        sig = fingerprint_data["signature"]
+        bands = split_vector(sig, num_bands)
+        
+        for band_idx, band in enumerate(bands):
+            band_key = tuple(band)
+            if band_idx not in band_buckets:
+                band_buckets[band_idx] = {}
+            
+            if band_key not in band_buckets[band_idx]:
+                band_buckets[band_idx][band_key] = []
+        
+            band_buckets[band_idx][band_key].append(fingerprint_id)
+    
+    return band_buckets
+
+#  Calculate Jaccard similarity between two signatures
+def calculate_jaccard_similarity(sig1, sig2):
+    
+    if len(sig1) != len(sig2):
+        return 0.0
+    
+    matches = sum(1 for a, b in zip(sig1, sig2) if a == b)
+    return matches / len(sig1) 
+
 
 
 

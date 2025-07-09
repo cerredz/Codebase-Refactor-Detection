@@ -1,5 +1,6 @@
 from services.LSH.lsh_helpers import *
 import numpy as np
+import json
 
 def lsh(file_mapping: dict):
     # 1) Create our global shingle set
@@ -10,7 +11,6 @@ def lsh(file_mapping: dict):
             line_shingle_set = generate_shingle_set(line)
             if line_shingle_set is not None:
                 union.update(line_shingle_set)
-
 
     # 2) Convert union to list for consistent indexing
     shingle_list = list(union)
@@ -47,6 +47,42 @@ def lsh(file_mapping: dict):
                     'prev_signature': prev_id
                 }
 
-    import json
-    print(json.dumps(signatures, indent=2))
-    return 0
+    # 5) Create buckets for banding
+    banding = create_band_buckets(signatures, 10)
+    
+    # 6) Find candidates from the same buckets
+    candidates = set()
+
+    for band_idx, buckets in banding.items():
+        for band_key, fingerprint_ids in buckets.items():
+            # found candidates, add all combinations of them to candidates
+            if len(fingerprint_ids) > 1:
+                for i in range(len(fingerprint_ids)):
+                    for j in range(i + 1, len(fingerprint_ids)):
+                        candidates.add((fingerprint_ids[i], fingerprint_ids[j]))
+                        candidates.add((fingerprint_ids[j], fingerprint_ids[i]))
+
+    # 7) Using candidates, find the actual similiar ones
+    similiarity_threshold = .7
+    similiarity_adjacency_list = {}
+
+    for candidate_pair in candidates:
+        if len(candidate_pair) == 2:
+            id1, id2 = candidate_pair
+            sig1 = signatures[id1]["signature"]
+            sig2 = signature[id2]["signature"]
+
+            similarity = calculate_jaccard_similarity(sig1, sig2)
+
+            if similarity > similiarity_threshold:
+                # create connection in graph if above similiarity threshold
+                if not similiarity_adjacency_list[id1]:
+                    similiarity_adjacency_list[id1] = []
+
+                if not similiarity_adjacency_list[id2]:
+                    similiarity_adjacency_list[id2] = []
+
+                similiarity_adjacency_list[id1].append(id2)
+                similiarity_adjacency_list[id2].append(id1)
+
+    return signatures, similiarity_adjacency_list  
