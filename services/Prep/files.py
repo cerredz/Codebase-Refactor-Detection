@@ -53,6 +53,30 @@ def get_subfiles(abs_file_path: str):
     return file_paths
     
 
+def get_similiar_region_code(file1, file2, start1, end1, start2, end2):
+    if not os.path.exists(file1) or not os.path.exists(file2):
+        print("file not found")
+        return []
+    
+    file1_code = ""
+    with open(file1, "r", encoding="utf-8") as file:
+        lines1 = file.readlines()
+        for i in range(len(lines1)):
+            line_number = i + 1
+            if start1 <= line_number <= end1:
+                file1_code += lines1[i]
+    
+    file2_code = ""
+    with open(file2, "r", encoding="utf-8") as file:
+        lines2 = file.readlines()
+        for i in range(len(lines2)):
+            line_number = i + 1
+            if start2 <= line_number <= end2:
+                file2_code += lines2[i]
+
+    return {"file1": file1_code, "file2": file2_code}
+
+
 
     
 

@@ -43,7 +43,25 @@ if __name__ == "__main__":
     print("Running the lsh algorithm for similiarity searching...")
     signatures, similiarity_adjacency_list = lsh(file_mappings) # run the lsh algorithm to hash similiar lines
     
-    #print(json.dumps(lsh, indent=2))
+    # find similiar regions using graph + sliding window
     print("Finding similiar regions of code...")
-    find_similiar_regions(signatures, similiarity_adjacency_list)
+    region_threshold = -25 # how many lines of code need to be similiar to determine a similiar region
+    similiar_regions = find_similiar_regions(signatures, similiarity_adjacency_list, region_threshold)
+    res = []
+
+    # actually regions of code in similiar regions
+    for region in similiar_regions:
+        file1 = region[1][0]
+        file2 = region[1][1]
+        file1_start = region[1][2]
+        file1_end = region[1][3]
+        file2_start = region[1][4]
+        file2_end = region[1][5]
+        res.append(get_similiar_region_code(file1, file2, file1_start, file1_end, file2_start, file2_end))
+    
+    print(res)
+
+
+
+    
     
