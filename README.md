@@ -98,25 +98,6 @@ The tool generates `results.json` containing:
 - **Web Dashboard**: Interactive web interface for visualizing refactoring opportunities
 - **IDE Plugins**: Direct integration with popular code editors
 
-## Example Output
-
-```json
-[
-  {
-    "regions": {
-      "file1_region": ["def process_data():", "    data = load_data()", "    return transform(data)"],
-      "file2_region": ["def handle_input():", "    input = get_input()", "    return process(input)"]
-    },
-    "file1": "src/module_a.py",
-    "file2": "src/module_b.py"
-  }
-]
-```
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
-
-## License
-
-[Add your license information here]
