@@ -2,7 +2,7 @@ from services.LSH.lsh_helpers import *
 import numpy as np
 import json
 
-def lsh(file_mapping: dict):
+def lsh(file_mapping: dict, candidate_threshold: float):
     # 1) Create our global shingle set
     union = set()
     for keys, values in file_mapping.items():
@@ -83,7 +83,7 @@ def lsh(file_mapping: dict):
     print("🟢 Found potential candidates. (6/7)")
 
     # 7) Using candidates, find the actual similiar ones
-    similiarity_threshold = .7
+    similiarity_threshold = candidate_threshold
     similiarity_adjacency_list = {}
 
     for candidate_pair in candidates:

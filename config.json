@@ -1,0 +1,5 @@
+{
+  "region_length": 10,
+  "candidate_threshold": 0.7,
+  "line_threshold": 0.8
+}
