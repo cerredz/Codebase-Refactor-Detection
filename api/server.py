@@ -9,8 +9,11 @@ import sys
 import os
 import shutil
 
-# Add parent directory to path to import services
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+# Robust path fix for Vercel/monorepo
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))  # Up from api/ to root
+sys.path.insert(0, project_root)
+print('Project root:', project_root)  # Debug: will show in Vercel logs
+print('sys.path:', sys.path)  # Debug
 
 from services.Prep.read_config import read_config
 from services.Prep.codebase import *
@@ -23,7 +26,7 @@ MAX_REQUEST_SIZE = 5 * 1024 * 1024 # 5MB
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Next.js dev server
+    allow_origins=["http://localhost:3000", "https://codebase-refactor-detection.vercel.app"],  # Next.js dev server
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
