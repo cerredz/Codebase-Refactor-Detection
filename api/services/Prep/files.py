@@ -1,5 +1,5 @@
-from services.Prep.extensions import *
-from services.Prep.paths import get_hidden_filepaths_path, get_codebase_path, get_project_root
+from .extensions import *
+from .paths import get_hidden_filepaths_path, get_codebase_path, get_project_root
 from collections import deque
 import os
 

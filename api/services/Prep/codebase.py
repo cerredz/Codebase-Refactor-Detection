@@ -1,5 +1,5 @@
-from services.Prep.normalizer import *
-from services.Prep.files import *
+from .normalizer import *
+from .files import *
 
 # Helper function for reading the codebase, reads all of the files in a directory, then recursively reads files in subdirectories
 def read_dir(current_path: str):

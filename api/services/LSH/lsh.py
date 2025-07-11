@@ -1,4 +1,4 @@
-from services.LSH.lsh_helpers import *
+from .lsh_helpers import *
 import numpy as np
 import json
 

@@ -1,4 +1,4 @@
-from services.LSH.lsh_helpers import calculate_jaccard_similarity
+from ..LSH.lsh_helpers import calculate_jaccard_similarity
 
 # Given two keys in our similiar candidates graph, find their actual similiarity and use the double 
 # linked link structure of each of our signatures to find the overall similiar region of code

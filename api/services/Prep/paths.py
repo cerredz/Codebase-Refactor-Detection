@@ -9,10 +9,11 @@ def get_project_root():
     Get the absolute path to the project root directory.
     Works from any subdirectory in the project.
     """
-    # Get the directory of this file (services/Prep/paths.py)
+    # In Vercel deployment, everything is in /var/task
+    # Get the directory of this file (api/services/Prep/paths.py)
     current_dir = os.path.dirname(__file__)
-    # Go up two levels to get to project root
-    project_root = os.path.dirname(os.path.dirname(current_dir))
+    # Go up three levels to get to project root (/var/task)
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_dir)))
     return os.path.abspath(project_root)
 
 def get_codebase_path():

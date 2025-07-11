@@ -1,6 +1,6 @@
 from collections import deque
-from services.LSH.lsh import calculate_jaccard_similarity
-from services.Similiarity.similiar_region_helpers import *
+from ..LSH.lsh_helpers import calculate_jaccard_similarity
+from .similiar_region_helpers import *
 import heapq
 
 def find_similiar_regions(signatures, adj_list, region_threshold, threshold = .80):
