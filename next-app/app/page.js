@@ -239,7 +239,45 @@ export default function Home() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [showSimilarRegions, setShowSimilarRegions] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
+  const [uploadMode, setUploadMode] = useState("files"); // 'files' or 'folder'
   const fileInputRef = useRef(null);
+
+  // Helper function to traverse directories and collect all files
+  const traverseFileTree = async (item, path = "") => {
+    return new Promise((resolve) => {
+      const files = [];
+
+      if (item.isFile) {
+        item.file((file) => {
+          // Create a new file with the full path
+          const fileWithPath = new File([file], path + file.name, {
+            type: file.type,
+            lastModified: file.lastModified,
+          });
+          files.push(fileWithPath);
+          resolve(files);
+        });
+      } else if (item.isDirectory) {
+        const dirReader = item.createReader();
+        const readEntries = () => {
+          dirReader.readEntries(async (entries) => {
+            if (entries.length === 0) {
+              resolve(files);
+            } else {
+              for (const entry of entries) {
+                const subFiles = await traverseFileTree(entry, path + item.name + "/");
+                files.push(...subFiles);
+              }
+              readEntries(); // Continue reading if there are more entries
+            }
+          });
+        };
+        readEntries();
+      } else {
+        resolve(files);
+      }
+    });
+  };
 
   // Upload files to server
   const uploadFiles = async (files) => {
@@ -266,7 +304,7 @@ export default function Home() {
         setTimeout(() => {
           setShowUploader(false);
           setShowSimilarRegions(true);
-        }, 1000); // Show success for 1 second before closing
+        }, 1000);
       } else {
         console.error("Upload failed");
       }
@@ -288,13 +326,30 @@ export default function Home() {
     }
   };
 
-  // Handle drop event
-  const handleDrop = (e) => {
+  // Handle drop event with folder support
+  const handleDrop = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
 
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    const items = e.dataTransfer.items;
+    const files = [];
+
+    if (items) {
+      // Use DataTransferItemList interface to handle folders
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i].webkitGetAsEntry();
+        if (item) {
+          const itemFiles = await traverseFileTree(item);
+          files.push(...itemFiles);
+        }
+      }
+
+      if (files.length > 0) {
+        uploadFiles(files);
+      }
+    } else if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      // Fallback to regular file handling
       uploadFiles(e.dataTransfer.files);
     }
   };
@@ -308,7 +363,17 @@ export default function Home() {
 
   // Handle browse button click
   const handleBrowseClick = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      // Set the appropriate attributes based on upload mode
+      if (uploadMode === "folder") {
+        fileInputRef.current.setAttribute("webkitdirectory", "");
+        fileInputRef.current.setAttribute("directory", "");
+      } else {
+        fileInputRef.current.removeAttribute("webkitdirectory");
+        fileInputRef.current.removeAttribute("directory");
+      }
+      fileInputRef.current.click();
+    }
   };
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -462,7 +527,31 @@ export default function Home() {
                     <h2 className="text-xl font-semibold text-white">{uploading ? "Loading..." : "Upload files"}</h2>
                   </div>
 
-                  <p className="text-sm text-blue-100/80 mb-6">Select and upload the files of your choice</p>
+                  <p className="text-sm text-blue-100/80 mb-4">Select and upload files or folders of your choice</p>
+
+                  {/* Upload Mode Selector */}
+                  <div className="flex gap-2 mb-6">
+                    <button
+                      onClick={() => setUploadMode("files")}
+                      className={`px-4 py-2 rounded-lg text-xs font-medium transition-all duration-200 border ${
+                        uploadMode === "files"
+                          ? "bg-blue-500/30 border-blue-400/50 text-white"
+                          : "bg-blue-500/10 border-blue-400/20 text-blue-200/70 hover:bg-blue-500/20"
+                      }`}
+                    >
+                      📄 Files
+                    </button>
+                    <button
+                      onClick={() => setUploadMode("folder")}
+                      className={`px-4 py-2 rounded-lg text-xs font-medium transition-all duration-200 border ${
+                        uploadMode === "folder"
+                          ? "bg-blue-500/30 border-blue-400/50 text-white"
+                          : "bg-blue-500/10 border-blue-400/20 text-blue-200/70 hover:bg-blue-500/20"
+                      }`}
+                    >
+                      📁 Folder
+                    </button>
+                  </div>
 
                   {/* Upload Area */}
                   <div className="mb-6">
@@ -494,6 +583,15 @@ export default function Home() {
                                 d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                               ></path>
                             </svg>
+                          ) : uploadMode === "folder" ? (
+                            <svg className="w-6 h-6 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                              />
+                            </svg>
                           ) : (
                             <svg className="w-6 h-6 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path
@@ -506,10 +604,18 @@ export default function Home() {
                           )}
                         </div>
                         <div>
-                          <p className="text-white font-medium mb-1">{uploading ? "Uploading..." : "Choose a file or drag & drop it here"}</p>
+                          <p className="text-white font-medium mb-1">
+                            {uploading
+                              ? "Uploading..."
+                              : uploadMode === "folder"
+                              ? "Choose a folder or drag & drop it here"
+                              : "Choose files or drag & drop them here"}
+                          </p>
                           <p className="text-xs text-blue-200/70">
                             {uploadedFiles.length > 0
                               ? `${uploadedFiles.length} file(s) uploaded successfully`
+                              : uploadMode === "folder"
+                              ? "Drag entire folders including subdirectories"
                               : "All file formats supported, up to 50MB per file"}
                           </p>
                         </div>
@@ -522,13 +628,20 @@ export default function Home() {
                               "inset 0 2px 4px rgba(59, 130, 246, 0.4), inset 0 -2px 4px rgba(30, 58, 138, 0.3), 0 4px 8px rgba(30, 58, 138, 0.2)",
                           }}
                         >
-                          {uploading ? "Uploading..." : "Browse File"}
+                          {uploading ? "Uploading..." : uploadMode === "folder" ? "Browse Folder" : "Browse Files"}
                         </button>
                       </div>
                     </div>
 
                     {/* Hidden file input */}
-                    <input ref={fileInputRef} type="file" multiple onChange={handleFileInput} className="hidden" accept="*/*" />
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      multiple={uploadMode === "files"}
+                      onChange={handleFileInput}
+                      className="hidden"
+                      accept="*/*"
+                    />
 
                     {/* Uploaded files list */}
                     {uploadedFiles.length > 0 && (
