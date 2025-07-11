@@ -55,25 +55,19 @@ The refactor analyzer includes a comprehensive CLI interface with the following 
 #### Run Analysis
 
 ```bash
-python -m cli.main --run
-```
-
-Run the refactor analysis with a custom config file:
-
-```bash
-python -m cli.main --run --config-file path/to/your/config.json
+refactor --run
 ```
 
 #### View Configuration
 
 ```bash
-python -m cli.main --config
+refactor --config
 ```
 
 #### View Results
 
 ```bash
-python -m cli.main --report
+refactor --report
 ```
 
 The report command provides a formatted, easy-to-read output of all similar regions found, including:
@@ -88,7 +82,7 @@ The report command provides a formatted, easy-to-read output of all similar regi
 Running the CLI without any arguments defaults to the `--run` command:
 
 ```bash
-python -m cli.main
+refactor
 ```
 
 ### Legacy Usage
@@ -139,6 +133,7 @@ Use the `--report` command for a human-readable formatted output of the results.
 
 🚧 **Coming Soon:**
 
+- **More CLI Commands**: More in-depth cli commands that give you more control over testing.
 - **REST API**: HTTP API for integration with IDEs and CI/CD pipelines
 - **Web Dashboard**: Interactive web interface for visualizing refactoring opportunities
 - **IDE Plugins**: Direct integration with popular code editors
