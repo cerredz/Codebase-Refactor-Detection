@@ -67,7 +67,7 @@ const SimilarRegions = ({ result, onClose }) => {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/30 via-blue-600/20 to-blue-800/25 pointer-events-none"></div>
 
           {/* Action buttons */}
-          <div className="absolute top-0 right-4 z-50 flex gap-2">
+          <div className="absolute top-6 right-4 z-50 flex gap-2">
             {/* Download button */}
             <button
               onClick={() => {
