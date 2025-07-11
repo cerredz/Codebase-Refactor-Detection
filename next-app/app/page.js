@@ -37,7 +37,7 @@ const SimilarRegions = ({ result, onClose }) => {
         onClick={onClose}
       >
         <div className="bg-blue-950/30 backdrop-blur-xl border border-blue-400/30 rounded-2xl p-8 text-center">
-          <p className="text-white">No similar regions found in your codebase.</p>
+          <p className="text-white/40 tracking-wider font-semibold">No similar regions found in your codebase. You are an s-tier programmer.</p>
         </div>
       </motion.div>
     );
