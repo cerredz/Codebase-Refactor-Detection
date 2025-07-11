@@ -2,6 +2,7 @@ from services.Prep.codebase import *
 from services.LSH.lsh import *
 from services.Similiarity.find_similiar_regions import *
 from services.Prep.read_config import *
+from services.Prep.paths import get_results_path
 import time
 import json
 
@@ -35,7 +36,7 @@ if __name__ == "__main__":
         file2_end = region[1][5]
         res.append({"regions": get_similiar_region_code(file1, file2, file1_start, file1_end, file2_start, file2_end), "file1": file1, "file2": file2})
     
-    with open("./results.json", "w") as file:
+    with open(get_results_path(), "w") as file:
         json.dump(res, file)
 
     end = time.time()

@@ -1,16 +1,16 @@
 from services.Prep.extensions import *
+from services.Prep.paths import get_hidden_filepaths_path, get_codebase_path, get_project_root
 from collections import deque
 import os
 
 def get_invalid_file_paths():
-    relative_path = "./hidden_filepaths.txt"
-    absolute_path = os.path.abspath(relative_path)
+    absolute_path = get_hidden_filepaths_path()
     res = set()
 
     # read pre-defined hidden file-paths from the user
     with open(absolute_path, "r") as file:
         path = file.readline()
-        abs_path = os.path.abspath(f"./codebase/{path}")
+        abs_path = os.path.abspath(os.path.join(get_project_root(), "codebase", path))
         res.add(abs_path)
     return res
 
@@ -29,8 +29,7 @@ def is_invalid_file_path(file_path: str):
     return True
 
 def get_codebase_dir():
-    codebase_dir = "./codebase"
-    return os.path.abspath(codebase_dir)
+    return get_codebase_path()
 
 def get_subfolders(abs_dir_path: str):
     if not os.path.exists(abs_dir_path) or not os.path.isdir(abs_dir_path):

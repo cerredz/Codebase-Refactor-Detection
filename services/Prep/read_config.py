@@ -1,9 +1,8 @@
-import os
 import json
+from services.Prep.paths import get_config_path
 
 def read_config():
-    path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-    with open(os.path.join(path, "config.json"), "r") as file:
+    with open(get_config_path(), "r") as file:
         config = json.load(file)
     
     return config
