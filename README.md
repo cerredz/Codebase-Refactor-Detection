@@ -24,6 +24,7 @@ The Refactor Analyzer employs sophisticated similarity detection algorithms to s
 - ✅ **Detailed Output**: Provides exact line numbers and code content for each similar region
 - ✅ **JSON Export**: Machine-readable results for integration with other tools
 - ✅ **Progress Tracking**: Real-time feedback during analysis with step-by-step progress indicators
+- ✅ **CLI Interface**: Command-line tool with multiple commands and options
 
 ## Prerequisites
 
@@ -47,9 +48,52 @@ pip install -r requirements.txt
 
 ## How to Use
 
-### Basic Usage
+### CLI Usage (Recommended)
 
-Run the analyzer from the project root directory:
+The refactor analyzer includes a comprehensive CLI interface with the following commands:
+
+#### Run Analysis
+
+```bash
+python -m cli.main --run
+```
+
+Run the refactor analysis with a custom config file:
+
+```bash
+python -m cli.main --run --config-file path/to/your/config.json
+```
+
+#### View Configuration
+
+```bash
+python -m cli.main --config
+```
+
+#### View Results
+
+```bash
+python -m cli.main --report
+```
+
+The report command provides a formatted, easy-to-read output of all similar regions found, including:
+
+- 📁 File pairs with similar regions
+- 📂 Full file paths
+- 🔸 Actual code content for each similar region
+- Visual separators for easy reading
+
+#### Default Behavior
+
+Running the CLI without any arguments defaults to the `--run` command:
+
+```bash
+python -m cli.main
+```
+
+### Legacy Usage
+
+You can still run the analyzer using the original method:
 
 ```bash
 python -m main
@@ -89,11 +133,12 @@ The tool generates `results.json` containing:
 - **Line Numbers**: Precise locations of similar code blocks
 - **Similarity Scores**: Quantified similarity between regions
 
+Use the `--report` command for a human-readable formatted output of the results.
+
 ## More to Come
 
 🚧 **Coming Soon:**
 
-- **CLI Interface**: Command-line tool with advanced options and filtering
 - **REST API**: HTTP API for integration with IDEs and CI/CD pipelines
 - **Web Dashboard**: Interactive web interface for visualizing refactoring opportunities
 - **IDE Plugins**: Direct integration with popular code editors

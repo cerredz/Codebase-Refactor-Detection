@@ -11,7 +11,6 @@ if __name__ == "__main__":
     print("Reading config file...")
     config = read_config()
 
-
     # read codebase
     print("Running algorithm to suggest codbase refactors...")
     file_mappings = read_codebase() # normalized code of all files, mapping to original file index
@@ -36,9 +35,9 @@ if __name__ == "__main__":
         file2_end = region[1][5]
         res.append({"regions": get_similiar_region_code(file1, file2, file1_start, file1_end, file2_start, file2_end), "file1": file1, "file2": file2})
     
-
     with open("./results.json", "w") as file:
         json.dump(res, file)
+
     end = time.time()
     total_time = end - start
 
