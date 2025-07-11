@@ -10,7 +10,7 @@ import os
 import shutil
 
 # Robust path fix for Vercel/monorepo
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))  # Up from api/ to root
+project_root = '/var/task'  # Vercel's runtime dir containing the full repo
 sys.path.insert(0, project_root)
 print('Project root:', project_root)  # Debug: will show in Vercel logs
 print('sys.path:', sys.path)  # Debug
