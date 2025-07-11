@@ -10,15 +10,9 @@ import os
 import shutil
 
 # Robust path fix for Vercel/monorepo
-# In Vercel, code is placed in /var/task, so use that as the base
+# Services is now copied into api directory, so use current directory
 project_root = '/var/task'  # Vercel's working directory contains our full repo
 sys.path.insert(0, project_root)
-print('Project root:', project_root)  # Debug: will show in Vercel logs
-print('sys.path:', sys.path)  # Debug
-print('Files in project root:', os.listdir(project_root))  # Debug: see what's actually there
-print('Services exists:', os.path.exists('/var/task/services'))  # Check if services folder exists
-if os.path.exists('/var/task/services'):
-    print('Services contents:', os.listdir('/var/task/services'))
 
 from services.Prep.read_config import read_config
 from services.Prep.codebase import *
