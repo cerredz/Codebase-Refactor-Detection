@@ -18,7 +18,8 @@ def get_project_root():
 
 def get_codebase_path():
     """Get the absolute path to the codebase directory."""
-    return os.path.join(get_project_root(), "codebase")
+    # In serverless environment, use /tmp for writable storage
+    return "/tmp/codebase"
 
 def get_config_path():
     """Get the absolute path to the config.json file."""

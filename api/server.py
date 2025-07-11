@@ -31,7 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "codebase")
+UPLOAD_DIR = "/tmp/codebase"  # Use /tmp for writable storage in serverless
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 class MaxRequestSizeMiddleware(BaseHTTPMiddleware):
