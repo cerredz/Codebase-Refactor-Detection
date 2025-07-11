@@ -14,7 +14,8 @@ def read_dir(current_path: str):
     # Add current sub-files
     for file in sub_files:
         code, line_mapping = normalize_file_path(file)
-        file_mappings[file] = {"code": code, "line_mapping": line_mapping}
+        if code and line_mapping:
+            file_mappings[file] = {"code": code, "line_mapping": line_mapping}
 
     # repeat process for subfolders
     for sub_folder in sub_folders:
