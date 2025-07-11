@@ -36,7 +36,7 @@ The Refactor Analyzer employs sophisticated similarity detection algorithms to s
 1. Clone the repository:
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/cerredz/Codebase-Refactor-Detection.git
 cd refactor-analyzer
 ```
 
