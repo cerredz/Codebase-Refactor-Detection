@@ -58,8 +58,8 @@ async def refactor(files: List[UploadFile] = File(...)):
     try:
         # delete old codebase if it exists
         if os.path.exists(UPLOAD_DIR):
-            #shutil.rmtree(UPLOAD_DIR)
-            print(UPLOAD_DIR)   
+            shutil.rmtree(UPLOAD_DIR)
+               
         os.makedirs(UPLOAD_DIR, exist_ok=True)
 
         # save uploaded files/subfolders to codebase directory
