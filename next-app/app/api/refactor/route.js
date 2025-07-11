@@ -82,7 +82,7 @@ export async function POST(request) {
 
     console.log(`Processing request from ${clientIP} with ${files.length} files (${Math.round(totalSize / 1024)}KB total)`);
 
-    const baseUrl = process.env.NODE_ENV === "development" ? "http://127.0.0.1:8000" : "";
+    const baseUrl = process.env.NODE_ENV === "development" ? "http://127.0.0.1:8000" : "https://codebase-refactor-detection-api.vercel.app";
 
     // Create AbortController for timeout
     const controller = new AbortController();
